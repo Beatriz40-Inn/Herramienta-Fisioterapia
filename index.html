@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FisioPulmonar · Atención y reserva</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --azul: #1b5e6b;
+    --azul-claro: #e5f2f2;
+    --azul-oscuro: #123e47;
+    --acento: #2e9e8f;
+    --texto: #22323a;
+    --texto-suave: #5a6b73;
+    --fondo: #f6faf9;
+    --tarjeta: #ffffff;
+    --borde: #dde8e6;
+    --ok: #2e9e8f;
+    --warn: #b9852f;
+    --warn-bg: #fff6e8;
+    --warn-border: #eed3a3;
+    --warn-text: #7a5a12;
+    --radio: 12px;
+    --f-display: "Fraunces", Georgia, "Times New Roman", serif;
+    --f-texto: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --azul: #7fd4cf;
+      --azul-claro: #163030;
+      --azul-oscuro: #eaf7f4;
+      --acento: #45c9b3;
+      --texto: #e7f2ef;
+      --texto-suave: #9fb7b2;
+      --fondo: #0e1a1a;
+      --tarjeta: #162727;
+      --borde: #294140;
+      --ok: #45c9b3;
+      --warn: #e3c37a;
+      --warn-bg: #2c2210;
+      --warn-border: #4a3a14;
+      --warn-text: #e3c37a;
+    }
+  }
+  :root[data-theme="dark"]{
+    --azul: #7fd4cf;
+    --azul-claro: #163030;
+    --azul-oscuro: #eaf7f4;
+    --acento: #45c9b3;
+    --texto: #e7f2ef;
+    --texto-suave: #9fb7b2;
+    --fondo: #0e1a1a;
+    --tarjeta: #162727;
+    --borde: #294140;
+    --ok: #45c9b3;
+    --warn: #e3c37a;
+    --warn-bg: #2c2210;
+    --warn-border: #4a3a14;
+    --warn-text: #e3c37a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    padding:0;
+    font-family:var(--f-texto);
+    background:var(--fondo);
+    color:var(--texto);
+    line-height:1.5;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 60px;}
+
+  header.top{
+    background:linear-gradient(135deg,#1b5e6b 0%, #123e47 100%);
+    color:#fff;
+    padding:36px 20px 32px;
+    margin-bottom:28px;
+  }
+  header.top .wrap{padding:0 20px;}
+  header.top h1{margin:0 0 6px;font-family:var(--f-display);font-size:1.85rem;font-weight:600;text-wrap:balance;}
+  header.top p.tag{margin:0 0 18px;opacity:.92;font-size:1.02rem;}
+  .contact-row{display:flex;flex-wrap:wrap;gap:10px;}
+  .contact-pill{
+    display:inline-flex;align-items:center;gap:7px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.3);
+    color:#fff;text-decoration:none;
+    padding:7px 14px;border-radius:999px;font-size:.9rem;
+  }
+  .contact-pill:hover{background:rgba(255,255,255,.24);}
+
+  section{margin-bottom:30px;}
+  h2{font-family:var(--f-display);font-weight:600;font-size:1.3rem;color:var(--azul-oscuro);margin:0 0 12px;border-left:4px solid var(--acento);padding-left:10px;text-wrap:balance;}
+  h3{font-family:var(--f-display);font-weight:600;font-size:1.1rem;color:var(--azul-oscuro);margin:0 0 6px;text-wrap:balance;}
+  p{margin:0 0 10px;color:var(--texto);}
+  .muted{color:var(--texto-suave);font-size:.92rem;}
+
+  .card{background:var(--tarjeta);border:1px solid var(--borde);border-radius:var(--radio);padding:18px 20px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:640px){.grid{grid-template-columns:1fr;}}
+
+  details.tratamiento{
+    background:var(--tarjeta);border:1px solid var(--borde);border-radius:var(--radio);
+    padding:14px 18px;margin-bottom:10px;
+  }
+  details.tratamiento summary{
+    cursor:pointer;font-weight:600;color:var(--azul-oscuro);list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+  }
+  details.tratamiento summary::-webkit-details-marker{display:none;}
+  details.tratamiento summary .chev{transition:transform .15s;color:var(--acento);font-size:1.1rem;}
+  details.tratamiento[open] summary .chev{transform:rotate(90deg);}
+  details.tratamiento .cont{margin-top:10px;color:var(--texto-suave);font-size:.95rem;}
+  details.tratamiento .cont ul{margin:6px 0 0;padding-left:18px;}
+
+  .precio-box{
+    background:var(--azul-claro);border:1px solid var(--borde);border-radius:var(--radio);
+    padding:18px 20px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  }
+  .precio-num{font-family:var(--f-display);font-size:2.1rem;font-weight:600;color:var(--azul);}
+  .precio-num span{font-size:1rem;font-weight:500;color:var(--texto-suave);}
+
+  .faq{border-bottom:1px solid var(--borde);}
+  .faq summary{cursor:pointer;padding:12px 2px;font-weight:600;color:var(--texto);list-style:none;display:flex;justify-content:space-between;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq .cont{padding:0 2px 14px;color:var(--texto-suave);}
+
+  /* ---- Wizard ---- */
+  .wizard-card{padding:0;overflow:hidden;}
+  .wizard-progress{
+    display:flex;align-items:center;gap:8px;
+    padding:14px 22px;background:var(--azul-claro);border-bottom:1px solid var(--borde);
+    font-size:.82rem;color:var(--azul-oscuro);font-weight:600;
+  }
+  .wizard-progress .dot{width:8px;height:8px;border-radius:50%;background:var(--borde);}
+  .wizard-progress .dot.on{background:var(--acento);}
+  #wizardBody{padding:22px 22px 24px;}
+  .wizard-q{font-family:var(--f-display);font-size:1.25rem;font-weight:600;color:var(--azul-oscuro);margin:0 0 16px;text-wrap:balance;}
+  .opciones{display:flex;flex-direction:column;gap:10px;}
+  .opcion-btn{
+    text-align:left;background:var(--tarjeta);border:1.5px solid var(--borde);border-radius:10px;
+    padding:13px 16px;font-size:.98rem;color:var(--texto);cursor:pointer;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;
+  }
+  .opcion-btn:hover{border-color:var(--acento);background:var(--azul-claro);}
+  .opcion-btn .arrow{color:var(--acento);font-weight:700;}
+  .wizard-back{
+    background:none;border:none;color:var(--texto-suave);font-size:.85rem;
+    cursor:pointer;padding:0;margin-bottom:14px;display:inline-flex;align-items:center;gap:4px;
+  }
+  .wizard-back:hover{color:var(--azul);}
+  .resultado-caso{background:var(--azul-claro);border:1px solid var(--borde);border-radius:10px;padding:16px 18px;margin-bottom:16px;}
+  .resultado-caso h3{margin-top:0;}
+  .fuente-cita{font-size:.8rem;color:var(--texto-suave);margin-top:8px;font-style:italic;}
+
+  .buscador{display:flex;gap:8px;margin-bottom:6px;}
+  .buscador input{
+    flex:1;padding:13px 14px;border:1.5px solid var(--borde);border-radius:10px;
+    font-size:1rem;font-family:inherit;background:var(--tarjeta);color:var(--texto);
+  }
+  .buscador input:focus{outline:none;border-color:var(--acento);}
+  .buscador button{white-space:nowrap;}
+  .buscador-ejemplos{font-size:.8rem;color:var(--texto-suave);margin:0 0 22px;}
+  .separador-o{display:flex;align-items:center;gap:10px;margin:22px 0 14px;color:var(--texto-suave);font-size:.85rem;}
+  .separador-o::before,.separador-o::after{content:"";flex:1;height:1px;background:var(--borde);}
+  .aviso-no-encontrado{background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn-text);border-radius:10px;padding:11px 14px;font-size:.88rem;margin-bottom:16px;}
+  .precio-linea{font-weight:700;color:var(--azul);font-size:1.15rem;margin:10px 0 4px;}
+  .accion-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+
+  form.lead{display:flex;flex-direction:column;gap:12px;}
+  form.lead label{font-size:.88rem;font-weight:600;color:var(--azul-oscuro);}
+  form.lead input, form.lead textarea{
+    padding:10px 12px;border:1px solid var(--borde);border-radius:8px;font-size:1rem;font-family:inherit;
+    width:100%;background:var(--tarjeta);color:var(--texto);
+  }
+  form.lead textarea{resize:vertical;min-height:60px;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media (max-width:600px){.row2{grid-template-columns:1fr;}}
+
+  button{
+    background:var(--acento);color:#fff;border:none;border-radius:8px;
+    padding:12px 18px;font-size:1rem;font-weight:600;cursor:pointer;
+  }
+  button:hover{background:#268a7d;}
+  button.secondary{background:var(--azul-claro);color:var(--azul-oscuro);}
+  button.secondary:hover{background:#d6ebe9;}
+  button.ghost{background:transparent;color:var(--azul);border:1px solid var(--borde);}
+  button:disabled{opacity:.5;cursor:not-allowed;}
+
+  .calendario-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+  @media (max-width:560px){.calendario-grid{grid-template-columns:1fr;}}
+  .slot-btn{
+    text-align:left;background:var(--tarjeta);border:1.5px solid var(--borde);border-radius:10px;
+    padding:12px 14px;cursor:pointer;font-size:.92rem;color:var(--texto);
+  }
+  .slot-btn:hover{border-color:var(--acento);}
+  .slot-btn.selected{border-color:var(--acento);background:var(--azul-claro);box-shadow:inset 0 0 0 1px var(--acento);}
+  .slot-btn .dia{display:block;font-weight:700;color:var(--azul-oscuro);}
+  .slot-btn .hora{display:block;color:var(--texto-suave);font-size:.85rem;margin-top:2px;}
+
+  textarea#mensajeTexto{width:100%;min-height:170px;font-family:inherit;font-size:.92rem;padding:12px;border:1px solid var(--borde);border-radius:8px;color:var(--texto);background:var(--tarjeta);}
+
+  .banner{
+    background:var(--warn-bg);border:1px solid var(--warn-border);color:var(--warn-text);
+    border-radius:10px;padding:12px 16px;font-size:.9rem;margin-bottom:20px;
+    display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  }
+  .banner button{padding:7px 12px;font-size:.85rem;}
+
+  .cfg-toggle{
+    background:none;border:1px solid var(--borde);color:var(--texto-suave);
+    padding:8px 14px;font-size:.85rem;border-radius:8px;
+  }
+  #panelConfig{display:none;margin-top:14px;}
+  #panelConfig.show{display:block;}
+  #panelConfig label{display:block;font-size:.85rem;font-weight:600;color:var(--azul-oscuro);margin-top:10px;margin-bottom:4px;}
+  #panelConfig input, #panelConfig textarea{width:100%;padding:9px 10px;border:1px solid var(--borde);border-radius:7px;font-family:inherit;font-size:.92rem;background:var(--tarjeta);color:var(--texto);}
+  #panelConfig textarea{min-height:90px;font-family:ui-monospace,Consolas,monospace;font-size:.85rem;}
+  .cfg-hint{font-size:.78rem;color:var(--texto-suave);margin-top:3px;}
+  .cfg-save-msg{font-size:.85rem;color:var(--ok);margin-left:10px;}
+
+  footer{text-align:center;color:var(--texto-suave);font-size:.82rem;padding:20px 0 0;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1 id="tituloClinica">FisioPulmonar</h1>
+    <p class="tag">Fisioterapia respiratoria a domicilio</p>
+    <div class="contact-row" id="contactRow"></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="banner" id="bannerConfig" style="display:none;">
+    ⚙ Antes de usarlo con pacientes, configura el email/WhatsApp de contacto y los huecos disponibles.
+    <button class="secondary" onclick="abrirConfig()">Configurar ahora</button>
+  </div>
+
+  <section>
+    <div class="card wizard-card">
+      <div class="wizard-progress" id="wizardProgress"></div>
+      <div id="wizardBody"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>¿Qué es la fisioterapia respiratoria?</h2>
+    <p>La fisioterapia respiratoria a domicilio ayuda a personas con enfermedades respiratorias crónicas o agudas a respirar mejor, eliminar secreciones y ganar autonomía, evitando ingresos hospitalarios y mejorando su calidad de vida. En FisioPulmonar trabajamos con planes individualizados, aparatología de última generación y un modelo de atención cercano, discreto y adaptado a cada paciente, en su propio domicilio.</p>
+  </section>
+
+  <section>
+    <h2>Tratamientos</h2>
+
+    <details class="tratamiento">
+      <summary>Sinusitis y problemas nasales <span class="chev">›</span></summary>
+      <div class="cont">
+        <p>Para pacientes mayores de 8 años con sinusitis (ocupación de los senos por moco infectado), diagnosticada por el otorrinolaringólogo. Aplicamos un protocolo diario durante 7 días para desobstruir y limpiar toda la esfera nasal, junto con pautas de ejercicios para el paciente.</p>
+        <p><strong>Beneficio:</strong> mejoría más rápida y menor riesgo de que el episodio se repita.</p>
+      </div>
+    </details>
+
+    <details class="tratamiento">
+      <summary>Patologías pulmonares (todas las edades, 0 a 90 años) <span class="chev">›</span></summary>
+      <div class="cont">
+        <p>Tratamos secreciones, disnea y baja capacidad pulmonar mediante ventilación dirigida y entrenamiento muscular de baja intensidad. Cubrimos, entre otras:</p>
+        <ul>
+          <li><strong>EPOC</strong> (Enfermedad Pulmonar Obstructiva Crónica) — el diagnóstico más frecuente entre nuestros pacientes.</li>
+          <li><strong>Bronquiectasias</strong> — muchas secreciones, tos e infecciones respiratorias de repetición.</li>
+          <li><strong>Bronquiolitis infantil</strong> (0-4 años) — especialmente frecuente de octubre a abril.</li>
+          <li><strong>Fibrosis quística</strong>.</li>
+          <li><strong>Fibrosis pulmonar</strong> — programas específicos para el cansancio y la fatiga.</li>
+          <li><strong>Enfermedades neuromusculares</strong> (ELA, esclerosis múltiple, Guillain-Barré) — tratamiento respiratorio con equipos como el "Cough Assist" para mantener el pulmón lo más limpio posible.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="tratamiento">
+      <summary>Cómo es el tratamiento inicial <span class="chev">›</span></summary>
+      <div class="cont">
+        <p>El plan inicial consiste en <strong>4 sesiones repartidas en un mes</strong> (una por semana), de entre 1 y 1:30h cada una, a domicilio:</p>
+        <ul>
+          <li><strong>Semana 1:</strong> valoración e información completa al paciente, tabla de ejercicios.</li>
+          <li><strong>Semana 2:</strong> revisión y seguimiento del tratamiento aplicado.</li>
+          <li><strong>Semana 3:</strong> ajuste del tratamiento según el avance.</li>
+          <li><strong>Semana 4:</strong> resolución de dudas y planificación de continuidad.</li>
+        </ul>
+        <p>El objetivo es lograr un paciente lo más autónomo posible, que aprenda a autogestionar su enfermedad.</p>
+      </div>
+    </details>
+
+  </section>
+
+  <section>
+    <h2>Precio orientativo</h2>
+    <div class="precio-box">
+      <div class="precio-num" id="precioTexto">70€ <span>/ sesión</span></div>
+      <p class="muted" style="margin:0;flex:1;min-width:220px;">Precio de referencia por sesión a domicilio. Puede variar según la duración del tratamiento o si el paciente requiere otras intervenciones. Se confirma el presupuesto exacto en la valoración inicial.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Preguntas frecuentes</h2>
+    <details class="faq"><summary>¿Las sesiones son a domicilio o en consulta? <span class="chev">›</span></summary><div class="cont">Todas las sesiones se realizan en el domicilio del paciente. Desplazamos la maquinaria y los dispositivos necesarios.</div></details>
+    <details class="faq"><summary>¿Necesito derivación médica? <span class="chev">›</span></summary><div class="cont">No es imprescindible para empezar la valoración, pero es recomendable que el paciente esté siendo seguido por su médico (neumólogo, pediatra u otorrino según el caso), ya que trabajamos en coordinación con el tratamiento médico.</div></details>
+    <details class="faq"><summary>¿Para qué edades es adecuado? <span class="chev">›</span></summary><div class="cont">Atendemos pacientes de 0 a 90 años: desde bebés con bronquiolitis hasta personas mayores con EPOC u otras patologías respiratorias crónicas.</div></details>
+    <details class="faq"><summary>¿Cuántas sesiones voy a necesitar? <span class="chev">›</span></summary><div class="cont">Depende del motivo de consulta: la sinusitis suele tratarse con un protocolo diario de 7 días, y las patologías pulmonares crónicas con un plan inicial de 4 sesiones en un mes. A partir de ahí, la continuidad se ajusta según la evolución.</div></details>
+    <details class="faq"><summary>¿En qué se diferencia de la fisioterapia respiratoria pública o de mutua? <span class="chev">›</span></summary><div class="cont">Dedicamos más tiempo por sesión (en torno a 1-1:30h), con un fisioterapeuta especializado en patología respiratoria, aparatología de última generación y un servicio personalizado, discreto y a domicilio.</div></details>
+  </section>
+
+  <section>
+    <button class="cfg-toggle" onclick="toggleConfig()">⚙ Configuración de la clínica</button>
+    <div id="panelConfig" class="card">
+      <p class="muted" style="margin-top:0;">Estos datos se guardan solo en este navegador (no se envían a ningún servidor). Edítalos una vez y quedan guardados para la próxima vez que abras este archivo.</p>
+
+      <label for="cfgNombre">Nombre de la clínica</label>
+      <input type="text" id="cfgNombre">
+
+      <label for="cfgEmail">Email de contacto (aquí llegarán las solicitudes)</label>
+      <input type="email" id="cfgEmail" placeholder="info@fisiopulmonar.com">
+
+      <label for="cfgTelefono">Teléfono</label>
+      <input type="tel" id="cfgTelefono" placeholder="900 000 000">
+
+      <label for="cfgWhatsapp">WhatsApp de la clínica (con prefijo país, solo números, ej: 34600000000)</label>
+      <input type="text" id="cfgWhatsapp" placeholder="34600000000">
+
+      <label for="cfgPrecio">Precio por sesión (€)</label>
+      <input type="number" id="cfgPrecio" placeholder="70">
+
+      <label for="cfgDisponibilidad">Huecos semanales disponibles (uno por línea: Día HH:MM)</label>
+      <textarea id="cfgDisponibilidad" placeholder="Martes 10:00&#10;Martes 12:00&#10;Jueves 10:00&#10;Viernes 09:30"></textarea>
+      <p class="cfg-hint">Días válidos: lunes, martes, miércoles, jueves, viernes, sábado, domingo. Es un patrón semanal recurrente, no un calendario real: todavía no está conectado a vuestra agenda.</p>
+
+      <label for="cfgNumProp">Número de fechas a mostrar en el calendario</label>
+      <input type="number" id="cfgNumProp" min="2" max="10" placeholder="6">
+
+      <div style="margin-top:14px;">
+        <button type="button" onclick="guardarConfig()">Guardar configuración</button>
+        <span class="cfg-save-msg" id="cfgSaveMsg" style="display:none;">Guardado ✓</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Herramienta interna de atención — funciona sin conexión ni cuentas, solo en este navegador. v2
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================= CONFIG ================= */
+  var DEFAULTS = {
+    nombre: "FisioPulmonar",
+    email: "",
+    telefono: "",
+    whatsapp: "",
+    precio: 70,
+    disponibilidad: "Martes 10:00\nMartes 12:00\nJueves 10:00\nViernes 09:30",
+    numProp: 6
+  };
+
+  var STORAGE_KEY = "rehaliza_config_v1";
+
+  function loadConfig(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        var parsed = JSON.parse(raw);
+        return Object.assign({}, DEFAULTS, parsed);
+      }
+    }catch(e){}
+    return Object.assign({}, DEFAULTS);
+  }
+  function saveConfigToStorage(c){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(c)); }catch(e){} }
+
+  var cfg = loadConfig();
+
+  function renderHeader(){
+    document.getElementById("tituloClinica").textContent = cfg.nombre || DEFAULTS.nombre;
+    document.getElementById("precioTexto").innerHTML = (cfg.precio || DEFAULTS.precio) + "€ <span>/ sesión</span>";
+
+    var row = document.getElementById("contactRow");
+    row.innerHTML = "";
+    if(cfg.telefono){
+      var a1 = document.createElement("a");
+      a1.className = "contact-pill";
+      a1.href = "tel:" + cfg.telefono.replace(/\s+/g,"");
+      a1.textContent = "📞 " + cfg.telefono;
+      row.appendChild(a1);
+    }
+    if(cfg.whatsapp){
+      var a2 = document.createElement("a");
+      a2.className = "contact-pill";
+      a2.href = "https://wa.me/" + cfg.whatsapp.replace(/\D/g,"");
+      a2.target = "_blank";
+      a2.textContent = "💬 WhatsApp";
+      row.appendChild(a2);
+    }
+    if(cfg.email){
+      var a3 = document.createElement("a");
+      a3.className = "contact-pill";
+      a3.href = "mailto:" + cfg.email;
+      a3.textContent = "✉ " + cfg.email;
+      row.appendChild(a3);
+    }
+    document.getElementById("bannerConfig").style.display = (!cfg.email) ? "flex" : "none";
+  }
+
+  function fillConfigPanel(){
+    document.getElementById("cfgNombre").value = cfg.nombre || "";
+    document.getElementById("cfgEmail").value = cfg.email || "";
+    document.getElementById("cfgTelefono").value = cfg.telefono || "";
+    document.getElementById("cfgWhatsapp").value = cfg.whatsapp || "";
+    document.getElementById("cfgPrecio").value = cfg.precio || DEFAULTS.precio;
+    document.getElementById("cfgDisponibilidad").value = cfg.disponibilidad || DEFAULTS.disponibilidad;
+    document.getElementById("cfgNumProp").value = cfg.numProp || DEFAULTS.numProp;
+  }
+
+  window.toggleConfig = function(){ document.getElementById("panelConfig").classList.toggle("show"); };
+  window.abrirConfig = function(){
+    document.getElementById("panelConfig").classList.add("show");
+    document.getElementById("panelConfig").scrollIntoView({behavior:"smooth", block:"start"});
+  };
+  window.guardarConfig = function(){
+    cfg.nombre = document.getElementById("cfgNombre").value.trim() || DEFAULTS.nombre;
+    cfg.email = document.getElementById("cfgEmail").value.trim();
+    cfg.telefono = document.getElementById("cfgTelefono").value.trim();
+    cfg.whatsapp = document.getElementById("cfgWhatsapp").value.trim();
+    cfg.precio = parseFloat(document.getElementById("cfgPrecio").value) || DEFAULTS.precio;
+    cfg.disponibilidad = document.getElementById("cfgDisponibilidad").value.trim() || DEFAULTS.disponibilidad;
+    cfg.numProp = parseInt(document.getElementById("cfgNumProp").value,10) || DEFAULTS.numProp;
+    saveConfigToStorage(cfg);
+    renderHeader();
+    var msg = document.getElementById("cfgSaveMsg");
+    msg.style.display = "inline";
+    setTimeout(function(){ msg.style.display = "none"; }, 2000);
+  };
+
+  /* ================= Fechas disponibles ================= */
+  var DIAS = { "domingo":0,"lunes":1,"martes":2,"miercoles":3,"miércoles":3,"jueves":4,"viernes":5,"sabado":6,"sábado":6 };
+  function quitarAcentos(s){ return s.normalize("NFD").replace(/[̀-ͯ]/g,""); }
+
+  function parseDisponibilidad(texto){
+    var slots = [];
+    texto.split("\n").forEach(function(linea){
+      linea = linea.trim();
+      if(!linea) return;
+      var partes = linea.split(/\s+/);
+      if(partes.length < 2) return;
+      var diaKey = quitarAcentos(partes[0].toLowerCase());
+      var m = partes[1].match(/^(\d{1,2}):(\d{2})$/);
+      if(!(diaKey in DIAS) || !m) return;
+      slots.push({ dia: DIAS[diaKey], hora: parseInt(m[1],10), minuto: parseInt(m[2],10) });
+    });
+    return slots;
+  }
+
+  function proximasFechas(slots, cantidad){
+    var ahora = new Date();
+    var desde = new Date(ahora.getTime() + 24*60*60*1000);
+    var candidatas = [];
+    slots.forEach(function(slot){
+      var d = new Date(desde);
+      d.setHours(0,0,0,0);
+      while(d.getDay() !== slot.dia){ d.setDate(d.getDate()+1); }
+      for(var w=0; w<10; w++){
+        var occ = new Date(d);
+        occ.setDate(d.getDate() + w*7);
+        occ.setHours(slot.hora, slot.minuto, 0, 0);
+        if(occ.getTime() > ahora.getTime()) candidatas.push(occ);
+      }
+    });
+    candidatas.sort(function(a,b){ return a-b; });
+    return candidatas.slice(0, cantidad);
+  }
+
+  function formatearFechaLarga(d){
+    var texto = d.toLocaleDateString("es-ES", { weekday:"long", day:"numeric", month:"long" });
+    var horas = String(d.getHours()).padStart(2,"0");
+    var min = String(d.getMinutes()).padStart(2,"0");
+    texto = texto.charAt(0).toUpperCase() + texto.slice(1);
+    return texto + " a las " + horas + ":" + min + "h";
+  }
+  function formatearFechaCorta(d){
+    var dia = d.toLocaleDateString("es-ES", { weekday:"long", day:"numeric", month:"short" });
+    dia = dia.charAt(0).toUpperCase() + dia.slice(1);
+    var horas = String(d.getHours()).padStart(2,"0");
+    var min = String(d.getMinutes()).padStart(2,"0");
+    return { dia: dia, hora: horas + ":" + min + "h" };
+  }
+
+  /* ================= Casos clínicos (rama del wizard) ================= */
+  function getCaso(motivo, subdiag){
+    var precio = cfg.precio || DEFAULTS.precio;
+    var casos = {
+      nasal: {
+        titulo: "Problemas nasales / sinusitis",
+        descripcion: "Tratamiento indicado para mayores de 8 años con sinusitis (ocupación de los senos por moco infectado). Aplicamos un protocolo diario durante 7 días para desobstruir y limpiar toda la esfera nasal, junto con pautas de ejercicios para el paciente. Ayuda a una mejoría más rápida y reduce el riesgo de que el episodio se repita.",
+        sesionesTexto: "Protocolo diario durante 7 días (7 sesiones).",
+        sesionesNum: 7,
+        notaExtra: null
+      },
+      epoc: {
+        titulo: "EPOC (Enfermedad Pulmonar Obstructiva Crónica)",
+        descripcion: "Es el diagnóstico más frecuente entre nuestros pacientes. Trabajamos la desobstrucción de secreciones y un programa de entrenamiento para que el paciente se canse menos, mejore su función pulmonar y gane autonomía en el día a día.",
+        sesionesTexto: "Plan inicial de 4 sesiones en 1 mes (una por semana, de 1 a 1:30h). Después se valora la continuidad.",
+        sesionesNum: 4,
+        notaExtra: null
+      },
+      bronquiectasias: {
+        titulo: "Bronquiectasias",
+        descripcion: "Pacientes con muchas secreciones, tos e infecciones respiratorias de repetición. El tratamiento se centra en la desobstrucción bronquial y en técnicas de respiración eficiente para reducir las infecciones.",
+        sesionesTexto: "Plan inicial de 4 sesiones en 1 mes (una por semana, de 1 a 1:30h). Después se valora la continuidad.",
+        sesionesNum: 4,
+        notaExtra: null
+      },
+      fibrosisPulmonar: {
+        titulo: "Fibrosis pulmonar",
+        descripcion: "En estos casos no suele haber tanta secreción, pero sí mucha fatiga y cansancio. Aplicamos programas específicos de actividad física adaptada a la capacidad del paciente.",
+        sesionesTexto: "Plan inicial de 4 sesiones en 1 mes (una por semana, de 1 a 1:30h). Después se valora la continuidad.",
+        sesionesNum: 4,
+        notaExtra: null
+      },
+      pulmonarOtro: {
+        titulo: "Patología pulmonar crónica",
+        descripcion: "Trabajamos la desobstrucción de secreciones, la respiración eficiente y un programa de entrenamiento adaptado, con el objetivo de mejorar la capacidad física y la calidad de vida del paciente.",
+        sesionesTexto: "Plan inicial de 4 sesiones en 1 mes (una por semana, de 1 a 1:30h). En la valoración inicial concretamos el diagnóstico y el plan exacto.",
+        sesionesNum: 4,
+        notaExtra: null
+      },
+      fibrosisQuistica: {
+        titulo: "Fibrosis quística",
+        descripcion: "Trabajamos la desobstrucción de secreciones y un programa de entrenamiento adaptado a las necesidades específicas de cada paciente con fibrosis quística.",
+        sesionesTexto: "Plan inicial de 4 sesiones en 1 mes (una por semana, de 1 a 1:30h). Después se valora la continuidad.",
+        sesionesNum: 4,
+        notaExtra: null
+      },
+      bronquiolitis: {
+        titulo: "Bronquiolitis (bebés y niños de 0 a 4 años)",
+        descripcion: "Ayudamos a desobstruir las vías respiratorias y a mejorar la respiración del bebé o niño. Es una dolencia especialmente frecuente entre octubre y abril.",
+        sesionesTexto: "El número de sesiones se ajusta a la evolución del bebé/niño; se concreta en la valoración inicial.",
+        sesionesNum: null,
+        notaExtra: null
+      },
+      neuromuscular: {
+        titulo: "Enfermedad neuromuscular (ELA, esclerosis múltiple, Guillain-Barré...)",
+        descripcion: "Tratamiento respiratorio centrado en mantener el pulmón lo más limpio posible, con equipos especializados como el \"Cough Assist\", y seguimiento continuado adaptado al estadio del paciente.",
+        sesionesTexto: "El plan de sesiones y de maquinaria necesaria se define en la valoración inicial, según el estadio del paciente.",
+        sesionesNum: null,
+        notaExtra: "Al requerir maquinaria específica, el presupuesto final puede variar respecto al precio orientativo por sesión."
+      },
+      otro: {
+        titulo: "Valoración general",
+        descripcion: "No hay problema — con una breve valoración inicial identificamos qué tipo de tratamiento respiratorio necesitas y te damos un plan y presupuesto concretos.",
+        sesionesTexto: "El número de sesiones se concreta tras la valoración inicial.",
+        sesionesNum: null,
+        notaExtra: null
+      }
+    };
+
+    var caso;
+    if(motivo === "pulmonar"){
+      if(subdiag === "epoc") caso = casos.epoc;
+      else if(subdiag === "bronquiectasias") caso = casos.bronquiectasias;
+      else if(subdiag === "fibrosisPulmonar") caso = casos.fibrosisPulmonar;
+      else caso = casos.pulmonarOtro;
+    } else {
+      caso = casos[motivo] || casos.otro;
+    }
+
+    var precioHtml;
+    if(caso.sesionesNum){
+      var total = precio * caso.sesionesNum;
+      precioHtml = precio + "€ / sesión &nbsp;·&nbsp; aprox. " + total + "€ el tratamiento inicial (" + caso.sesionesNum + " sesiones)";
+    } else {
+      precioHtml = precio + "€ / sesión (nº de sesiones a concretar en la valoración)";
+    }
+
+    return {
+      titulo: caso.titulo,
+      descripcion: caso.descripcion,
+      sesionesTexto: caso.sesionesTexto,
+      precioHtml: precioHtml,
+      notaExtra: caso.notaExtra
+    };
+  }
+
+  /* ================= Base de conocimiento (búsqueda en lenguaje libre) =================
+     Cada entrada representa un fragmento del documento de tratamientos de FisioPulmonar.
+     "caso" enlaza con getCaso() (motivo/subdiag); "faq" tiene su propia respuesta y fuente. */
+  var BASE_CONOCIMIENTO = [
+    { id:"nasal", tipo:"caso", motivo:"nasal", subdiag:null,
+      keywords:["sinusitis","nasal","nariz","moco","mocos","seno","senos","otorrino","congestion","congestionado"],
+      fuente:"Tratamientos — Sinusitis y problemas nasales" },
+    { id:"epoc", tipo:"caso", motivo:"pulmonar", subdiag:"epoc",
+      keywords:["epoc","obstructiva"],
+      fuente:"Tratamientos pulmonares — EPOC" },
+    { id:"bronquiectasias", tipo:"caso", motivo:"pulmonar", subdiag:"bronquiectasias",
+      keywords:["bronquiectasia","bronquiectasias"],
+      fuente:"Tratamientos pulmonares — Bronquiectasias" },
+    { id:"fibrosisPulmonar", tipo:"caso", motivo:"pulmonar", subdiag:"fibrosisPulmonar",
+      keywords:["fibrosis pulmonar","fatiga pulmon","cansancio pulmon"],
+      fuente:"Tratamientos pulmonares — Fibrosis pulmonar" },
+    { id:"fibrosisQuistica", tipo:"caso", motivo:"fibrosisQuistica", subdiag:null,
+      keywords:["fibrosis quistica","quistica"],
+      fuente:"Tratamientos pulmonares — Fibrosis quística" },
+    { id:"bronquiolitis", tipo:"caso", motivo:"bronquiolitis", subdiag:null,
+      keywords:["bronquiolitis","bebe","bebes","lactante","hijo tose","bebe tose","bebe respira","nino pequeno","recien nacido"],
+      fuente:"Tratamientos pulmonares — Bronquiolitis" },
+    { id:"neuromuscular", tipo:"caso", motivo:"neuromuscular", subdiag:null,
+      keywords:["ela","esclerosis multiple","guillain","neuromuscular","cough assist"],
+      fuente:"Tratamientos pulmonares — Enfermedades neuromusculares" },
+    { id:"reservar", tipo:"caso", motivo:"otro", subdiag:null,
+      keywords:["reservar","pedir cita","quiero cita","apuntarme","quiero empezar","quiero valoracion"],
+      fuente:"Modelo asistencial FisioPulmonar" },
+
+    { id:"precio", tipo:"faq",
+      keywords:["precio","precios","cuesta","cuanto","tarifa","vale","coste","euros"],
+      respuesta:"La sesión de fisioterapia respiratoria a domicilio cuesta " + (cfg.precio||DEFAULTS.precio) + "€. Si el tratamiento es más largo (por ejemplo el protocolo de sinusitis) o necesita otras intervenciones, el importe total varía — se concreta en la valoración inicial.",
+      fuente:"Información general — Precio orientativo" },
+    { id:"domicilio", tipo:"faq",
+      keywords:["domicilio","desplaza","venis","vienen","consulta o casa"],
+      respuesta:"Todas las sesiones se hacen en el domicilio del paciente. Desplazamos la maquinaria y los dispositivos necesarios, no hace falta que os mováis.",
+      fuente:"Preguntas frecuentes" },
+    { id:"derivacion", tipo:"faq",
+      keywords:["derivacion","volante","receta medica","medico me mande","recet"],
+      respuesta:"No es imprescindible una derivación médica para empezar la valoración, aunque es recomendable que el paciente esté siendo seguido por su médico, ya que trabajamos en coordinación con el tratamiento médico.",
+      fuente:"Preguntas frecuentes" },
+    { id:"edad", tipo:"faq",
+      keywords:["edad","edades","para ninos","para mayores","que edad"],
+      respuesta:"Atendemos pacientes de 0 a 90 años: desde bebés con bronquiolitis hasta personas mayores con EPOC u otras patologías respiratorias crónicas.",
+      fuente:"Preguntas frecuentes" },
+    { id:"sesionesNumero", tipo:"faq",
+      keywords:["cuantas sesiones","numero de sesiones","cuanto dura el tratamiento","cuanto tiempo dura"],
+      respuesta:"Depende del motivo: la sinusitis se trata con un protocolo diario de 7 días, y las patologías pulmonares crónicas con un plan inicial de 4 sesiones en un mes. A partir de ahí, la continuidad se ajusta según la evolución.",
+      fuente:"Preguntas frecuentes" },
+    { id:"diferenciaSS", tipo:"faq",
+      keywords:["seguridad social","mutua","diferencia con","publico"],
+      respuesta:"Dedicamos más tiempo por sesión (1-1:30h), con un fisioterapeuta especializado en patología respiratoria, aparatología de última generación y un servicio personalizado, discreto y a domicilio.",
+      fuente:"Preguntas frecuentes" }
+  ];
+
+  function quitarAcentosBase(s){ return String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,""); }
+  function normalizarTexto(s){ return quitarAcentosBase(s.toLowerCase()).replace(/[^a-z0-9\s]/g," "); }
+  function tokenizar(s){ return normalizarTexto(s).split(/\s+/).filter(Boolean); }
+
+  function coincideToken(qt, kw){
+    if(qt === kw) return true;
+    if(qt.length>=4 && kw.length>=4 && (qt.indexOf(kw)===0 || kw.indexOf(qt)===0)) return true;
+    return false;
+  }
+
+  function buscarEnBaseConocimiento(query){
+    var qTokens = tokenizar(query);
+    if(qTokens.length === 0) return null;
+    var mejor = null, mejorScore = 0;
+    BASE_CONOCIMIENTO.forEach(function(entry){
+      var score = 0;
+      entry.keywords.forEach(function(kwRaw){
+        var kw = normalizarTexto(kwRaw);
+        var kwTokens = kw.split(/\s+/).filter(Boolean);
+        if(kwTokens.length > 1){
+          var todasPresentes = kwTokens.every(function(kt){
+            return qTokens.some(function(qt){ return coincideToken(qt, kt); });
+          });
+          if(todasPresentes) score += 1.5;
+        } else {
+          qTokens.forEach(function(qt){
+            if(coincideToken(qt, kw)) score += 1;
+          });
+        }
+      });
+      if(entry.tipo === "caso" && score > 0) score += 0.1;
+      if(score > mejorScore){ mejorScore = score; mejor = entry; }
+    });
+    return mejorScore > 0 ? mejor : null;
+  }
+
+  /* ================= Wizard: estado y navegación ================= */
+  var state = { motivo:null, subdiag:null, nombre:"", email:"", telefono:"", fecha:null, ultimaPregunta:null };
+  var historial = [];
+  var currentStep = "inicio";
+  var avisoNoEncontrado = null;
+
+  var PASOS_ORDEN = ["inicio","resultado","contacto","calendario","confirmacion"];
+
+  function goTo(step){
+    historial.push(currentStep);
+    currentStep = step;
+    render();
+  }
+  function volver(){
+    if(historial.length){
+      currentStep = historial.pop();
+      render();
+    }
+  }
+  function reiniciar(){
+    state = { motivo:null, subdiag:null, nombre:"", email:"", telefono:"", fecha:null, ultimaPregunta:null };
+    historial = [];
+    currentStep = "inicio";
+    avisoNoEncontrado = null;
+    render();
+  }
+
+  function pasoIndice(step){
+    if(step === "subdiagnostico") return 0;
+    if(step === "faqRespuesta" || step === "contactoDirecto") return 1;
+    if(step === "fin") return 4;
+    var i = PASOS_ORDEN.indexOf(step);
+    return i < 0 ? 0 : i;
+  }
+
+  function renderProgreso(){
+    var total = 5;
+    var actual = pasoIndice(currentStep);
+    var html = "Paso " + (actual+1) + " de " + total + " &nbsp; ";
+    for(var i=0;i<total;i++){
+      html += '<span class="dot ' + (i<=actual?"on":"") + '"></span>';
+    }
+    document.getElementById("wizardProgress").innerHTML = html;
+  }
+
+  function backBtn(){
+    return historial.length ? '<button type="button" class="wizard-back" id="btnVolver">‹ Atrás</button>' : "";
+  }
+
+  function bind(id, ev, fn){ var el = document.getElementById(id); if(el) el.addEventListener(ev, fn); }
+
+  function render(){
+    renderProgreso();
+    var body = document.getElementById("wizardBody");
+
+    if(currentStep === "inicio"){
+      body.innerHTML =
+        '<p class="wizard-q">Escríbenos tu duda y te respondemos al momento</p>' +
+        (avisoNoEncontrado ? '<div class="aviso-no-encontrado">No hemos encontrado una respuesta exacta a «' + escapeHtml(avisoNoEncontrado) + '». Prueba con otras palabras, o elige una opción abajo.</div>' : '') +
+        '<form class="buscador" id="formBusqueda">' +
+          '<input type="text" id="inputPregunta" autocomplete="off" placeholder="Ej: ¿cuánto cuesta una sesión? / mi bebé tose mucho / ¿venís a casa?" value="' + escapeHtml(avisoNoEncontrado||"") + '">' +
+          '<button type="submit">Preguntar</button>' +
+        '</form>' +
+        '<p class="buscador-ejemplos">También puedes preguntar por precios, si es a domicilio, si hace falta receta médica, para qué edades es, etc.</p>' +
+        '<div class="separador-o">o elige directamente</div>' +
+        '<div class="opciones">' +
+          opcion("nasal","Problemas nasales / sinusitis") +
+          opcion("pulmonar","Problema pulmonar crónico en un adulto (EPOC, bronquiectasias, fibrosis pulmonar...)") +
+          opcion("fibrosisQuistica","Fibrosis quística") +
+          opcion("bronquiolitis","Bronquiolitis en un bebé o niño pequeño (0-4 años)") +
+          opcion("neuromuscular","Enfermedad neuromuscular (ELA, esclerosis múltiple, Guillain-Barré...)") +
+          opcion("otro","No estoy seguro / otro motivo") +
+        '</div>';
+      avisoNoEncontrado = null;
+
+      bind("formBusqueda","submit",function(ev){
+        ev.preventDefault();
+        var query = document.getElementById("inputPregunta").value.trim();
+        if(!query) return;
+        var match = buscarEnBaseConocimiento(query);
+        if(!match){
+          avisoNoEncontrado = query;
+          render();
+          return;
+        }
+        state.ultimaPregunta = query;
+        if(match.tipo === "caso"){
+          state.motivo = match.motivo;
+          state.subdiag = match.subdiag;
+          goTo("resultado");
+        } else {
+          state._faqActual = match;
+          goTo("faqRespuesta");
+        }
+      });
+
+      document.querySelectorAll(".opcion-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          state.ultimaPregunta = null;
+          state.motivo = this.getAttribute("data-val");
+          if(state.motivo === "pulmonar") goTo("subdiagnostico");
+          else goTo("resultado");
+        });
+      });
+      return;
+    }
+
+    if(currentStep === "faqRespuesta"){
+      var faq = state._faqActual || {};
+      body.innerHTML =
+        backBtn() +
+        (state.ultimaPregunta ? '<p class="muted">Respondiendo a: “' + escapeHtml(state.ultimaPregunta) + '”</p>' : '') +
+        '<div class="resultado-caso">' +
+          '<p style="margin-top:0;">' + (faq.respuesta||"") + '</p>' +
+          '<p class="fuente-cita">Fuente: ' + (faq.fuente||"") + '</p>' +
+        '</div>' +
+        '<div class="opciones">' +
+          opcion("reservar","Quiero reservar una valoración") +
+          opcion("otrapregunta","Tengo otra pregunta") +
+          opcion("fin","Nada más, gracias") +
+        '</div>';
+      bind("btnVolver","click",volver);
+      document.querySelectorAll(".opcion-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var v = this.getAttribute("data-val");
+          if(v === "reservar"){ state.motivo = "otro"; state.subdiag = null; goTo("contacto"); }
+          else if(v === "otrapregunta") goTo("inicio");
+          else goTo("fin");
+        });
+      });
+      return;
+    }
+
+    if(currentStep === "subdiagnostico"){
+      body.innerHTML =
+        backBtn() +
+        '<p class="wizard-q">¿Qué diagnóstico tiene, si lo sabe?</p>' +
+        '<div class="opciones">' +
+          opcion("epoc","EPOC") +
+          opcion("bronquiectasias","Bronquiectasias") +
+          opcion("fibrosisPulmonar","Fibrosis pulmonar") +
+          opcion("nose","No lo sé") +
+        '</div>';
+      bind("btnVolver","click",volver);
+      document.querySelectorAll(".opcion-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          state.subdiag = this.getAttribute("data-val");
+          goTo("resultado");
+        });
+      });
+      return;
+    }
+
+    if(currentStep === "resultado"){
+      var caso = getCaso(state.motivo, state.subdiag);
+      body.innerHTML =
+        backBtn() +
+        (state.ultimaPregunta ? '<p class="muted">Respondiendo a: “' + escapeHtml(state.ultimaPregunta) + '”</p>' : '') +
+        '<div class="resultado-caso">' +
+          '<h3>' + caso.titulo + '</h3>' +
+          '<p>' + caso.descripcion + '</p>' +
+          '<p class="muted"><strong>Duración del tratamiento:</strong> ' + caso.sesionesTexto + '</p>' +
+          '<div class="precio-linea">' + caso.precioHtml + '</div>' +
+          (caso.notaExtra ? '<p class="muted">' + caso.notaExtra + '</p>' : '') +
+          '<p class="fuente-cita">Fuente: Documento de tratamientos FisioPulmonar — ' + caso.titulo + '</p>' +
+        '</div>' +
+        '<div class="opciones">' +
+          opcion("reservar","Quiero reservar una valoración") +
+          opcion("otraduda","Tengo otra pregunta, prefiero que me llaméis") +
+          opcion("fin","Solo quería información, gracias") +
+        '</div>';
+      bind("btnVolver","click",volver);
+      document.querySelectorAll(".opcion-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var v = this.getAttribute("data-val");
+          if(v === "reservar") goTo("contacto");
+          else if(v === "otraduda") goTo("contactoDirecto");
+          else goTo("fin");
+        });
+      });
+      return;
+    }
+
+    if(currentStep === "contactoDirecto"){
+      body.innerHTML =
+        backBtn() +
+        '<p class="wizard-q">Sin problema. Contacta directamente y te atendemos en persona:</p>' +
+        '<div class="opciones">' +
+          (cfg.telefono ? '<a class="opcion-btn" href="tel:'+cfg.telefono.replace(/\s+/g,"")+'">📞 Llamar al ' + cfg.telefono + '</a>' : '') +
+          (cfg.whatsapp ? '<a class="opcion-btn" target="_blank" href="https://wa.me/'+cfg.whatsapp.replace(/\D/g,"")+'">💬 Escribir por WhatsApp</a>' : '') +
+          (cfg.email ? '<a class="opcion-btn" href="mailto:'+cfg.email+'">✉ Escribir a ' + cfg.email + '</a>' : '') +
+        '</div>' +
+        (!(cfg.telefono||cfg.whatsapp||cfg.email) ? '<p class="muted">Todavía no hay datos de contacto configurados — añádelos en "Configuración de la clínica".</p>' : '') +
+        '<div style="margin-top:16px;"><button type="button" class="ghost" id="btnReiniciar">Volver a empezar</button></div>';
+      bind("btnVolver","click",volver);
+      bind("btnReiniciar","click",reiniciar);
+      return;
+    }
+
+    if(currentStep === "contacto"){
+      body.innerHTML =
+        backBtn() +
+        '<p class="wizard-q">Perfecto. ¿Nos dejas tus datos de contacto?</p>' +
+        '<form class="lead" id="formContacto">' +
+          '<div><label for="wNombre">Nombre</label><input type="text" id="wNombre" required value="'+escapeHtml(state.nombre)+'"></div>' +
+          '<div class="row2">' +
+            '<div><label for="wEmail">Email</label><input type="email" id="wEmail" required value="'+escapeHtml(state.email)+'"></div>' +
+            '<div><label for="wTelefono">Teléfono (opcional)</label><input type="tel" id="wTelefono" value="'+escapeHtml(state.telefono)+'"></div>' +
+          '</div>' +
+          '<div><button type="submit">Ver fechas disponibles →</button></div>' +
+        '</form>';
+      bind("btnVolver","click",volver);
+      bind("formContacto","submit",function(ev){
+        ev.preventDefault();
+        state.nombre = document.getElementById("wNombre").value.trim();
+        state.email = document.getElementById("wEmail").value.trim();
+        state.telefono = document.getElementById("wTelefono").value.trim();
+        goTo("calendario");
+      });
+      return;
+    }
+
+    if(currentStep === "calendario"){
+      var slots = parseDisponibilidad(cfg.disponibilidad || DEFAULTS.disponibilidad);
+      var cantidad = cfg.numProp || DEFAULTS.numProp;
+      var fechas = proximasFechas(slots, cantidad);
+
+      var gridHtml = "";
+      if(fechas.length === 0){
+        gridHtml = '<p class="muted">No hay huecos configurados todavía. Puedes seguir sin elegir fecha y os pondréis de acuerdo por teléfono.</p>';
+      } else {
+        gridHtml = '<div class="calendario-grid">' + fechas.map(function(f, i){
+          var fc = formatearFechaCorta(f);
+          return '<button type="button" class="slot-btn" data-idx="'+i+'"><span class="dia">'+fc.dia+'</span><span class="hora">'+fc.hora+'</span></button>';
+        }).join("") + '</div>';
+      }
+
+      body.innerHTML =
+        backBtn() +
+        '<p class="wizard-q">Elige la fecha que mejor te venga</p>' +
+        gridHtml +
+        '<div class="accion-row">' +
+          '<button type="button" id="btnConfirmarFecha" disabled>Confirmar esta fecha</button>' +
+          '<button type="button" class="ghost" id="btnSinFecha">Prefiero que me llaméis para cuadrar día</button>' +
+        '</div>';
+      bind("btnVolver","click",volver);
+
+      var elegida = null;
+      document.querySelectorAll(".slot-btn").forEach(function(btn){
+        btn.addEventListener("click", function(){
+          document.querySelectorAll(".slot-btn").forEach(function(b){ b.classList.remove("selected"); });
+          this.classList.add("selected");
+          elegida = fechas[parseInt(this.getAttribute("data-idx"),10)];
+          document.getElementById("btnConfirmarFecha").disabled = false;
+        });
+      });
+      bind("btnConfirmarFecha","click",function(){
+        state.fecha = elegida;
+        goTo("confirmacion");
+      });
+      bind("btnSinFecha","click",function(){
+        state.fecha = null;
+        goTo("confirmacion");
+      });
+      return;
+    }
+
+    if(currentStep === "confirmacion"){
+      var casoF = getCaso(state.motivo, state.subdiag);
+      var clinica = cfg.nombre || DEFAULTS.nombre;
+      var fechaTexto = state.fecha ? formatearFechaLarga(state.fecha) : "A concretar por teléfono / WhatsApp";
+
+      var mensaje =
+        "Solicitud de valoración — " + clinica + "\n\n" +
+        "Nombre: " + state.nombre + "\n" +
+        "Email: " + state.email + "\n" +
+        (state.telefono ? ("Teléfono: " + state.telefono + "\n") : "") +
+        "Motivo de consulta: " + casoF.titulo + "\n" +
+        "Fecha propuesta: " + fechaTexto + "\n\n" +
+        "Mensaje generado automáticamente desde la herramienta de atención de " + clinica + ".";
+
+      body.innerHTML =
+        backBtn() +
+        '<p class="wizard-q">Todo listo. Así queda tu solicitud:</p>' +
+        '<textarea id="mensajeTexto" readonly>' + mensaje + '</textarea>' +
+        '<label style="font-size:.85rem;font-weight:600;color:var(--azul-oscuro);display:block;margin-top:14px;">¿Con qué quieres enviarla?</label>' +
+        '<div class="accion-row" style="margin-top:6px;">' +
+          '<select id="selCorreo" style="padding:11px 12px;border:1px solid var(--borde);border-radius:8px;font-family:inherit;font-size:.95rem;background:var(--tarjeta);color:var(--texto);">' +
+            '<option value="outlook">Outlook (web)</option>' +
+            '<option value="gmail">Gmail (web)</option>' +
+            '<option value="mailto">Mi app de correo del dispositivo</option>' +
+          '</select>' +
+          '<button type="button" id="btnEnviarEmail">✉ Abrir email</button>' +
+          (cfg.whatsapp ? '<button type="button" class="secondary" id="btnEnviarWhatsapp">💬 Enviar por WhatsApp</button>' : '') +
+          '<button type="button" class="ghost" id="btnCopiar">Copiar mensaje</button>' +
+        '</div>' +
+        '<p class="cfg-hint" style="margin-top:8px;">Si "Mi app de correo" no abre lo que esperas, es que tu ordenador o móvil tiene otra app distinta configurada como predeterminada — prueba con Outlook o Gmail (web), o usa "Copiar mensaje" y pégalo directamente.</p>' +
+        '<p class="muted" style="margin-top:14px;">La fecha propuesta se basa en la disponibilidad semanal configurada; ' + clinica + ' la confirmará al recibir tu solicitud.</p>' +
+        '<div style="margin-top:10px;"><button type="button" class="ghost" id="btnReiniciar2">Empezar una nueva consulta</button></div>';
+      bind("btnVolver","click",volver);
+
+      bind("btnEnviarEmail","click",function(){
+        var asunto = "Solicitud de valoración — " + state.nombre;
+        var destino = cfg.email || "";
+        var tipo = document.getElementById("selCorreo").value;
+        if(tipo === "outlook"){
+          window.open("https://outlook.office.com/mail/deeplink/compose?to=" + encodeURIComponent(destino) + "&subject=" + encodeURIComponent(asunto) + "&body=" + encodeURIComponent(mensaje), "_blank");
+        } else if(tipo === "gmail"){
+          window.open("https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(destino) + "&su=" + encodeURIComponent(asunto) + "&body=" + encodeURIComponent(mensaje), "_blank");
+        } else {
+          window.location.href = "mailto:" + encodeURIComponent(destino) + "?subject=" + encodeURIComponent(asunto) + "&body=" + encodeURIComponent(mensaje);
+        }
+      });
+      bind("btnEnviarWhatsapp","click",function(){
+        var numero = (cfg.whatsapp||"").replace(/\D/g,"");
+        if(!numero) return;
+        window.open("https://wa.me/" + numero + "?text=" + encodeURIComponent(mensaje), "_blank");
+      });
+      bind("btnCopiar","click",function(){
+        var ta = document.getElementById("mensajeTexto");
+        ta.select();
+        ta.setSelectionRange(0,999999);
+        try{
+          navigator.clipboard.writeText(ta.value).then(function(){
+            var b = document.getElementById("btnCopiar");
+            var orig = b.textContent;
+            b.textContent = "Copiado ✓";
+            setTimeout(function(){ b.textContent = orig; },1500);
+          });
+        }catch(e){ document.execCommand("copy"); }
+      });
+      bind("btnReiniciar2","click",reiniciar);
+      return;
+    }
+
+    if(currentStep === "fin"){
+      body.innerHTML =
+        backBtn() +
+        '<p class="wizard-q">Gracias por tu consulta 🙂</p>' +
+        '<p>Si en algún momento quieres reservar una valoración, aquí tienes nuestro contacto:</p>' +
+        '<div class="opciones">' +
+          (cfg.telefono ? '<a class="opcion-btn" href="tel:'+cfg.telefono.replace(/\s+/g,"")+'">📞 ' + cfg.telefono + '</a>' : '') +
+          (cfg.whatsapp ? '<a class="opcion-btn" target="_blank" href="https://wa.me/'+cfg.whatsapp.replace(/\D/g,"")+'">💬 WhatsApp</a>' : '') +
+          (cfg.email ? '<a class="opcion-btn" href="mailto:'+cfg.email+'">✉ ' + cfg.email + '</a>' : '') +
+        '</div>' +
+        '<div style="margin-top:16px;"><button type="button" class="ghost" id="btnReiniciar3">Volver a empezar</button></div>';
+      bind("btnVolver","click",volver);
+      bind("btnReiniciar3","click",reiniciar);
+      return;
+    }
+  }
+
+  function opcion(val,label){
+    return '<button type="button" class="opcion-btn" data-val="'+val+'">'+label+'<span class="arrow">›</span></button>';
+  }
+  function escapeHtml(s){
+    return (s||"").replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  // init
+  renderHeader();
+  fillConfigPanel();
+  render();
+})();
+</script>
+
+</body>
+</html>
